@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <title>Checklist Evento 13/06 — Dom da Areia</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 13px; color: #1a1a1a; background: #f4f4f4; padding: 24px; }
-    .container { max-width: 980px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 32px 36px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px; color: #1a1a1a; background: #f4f4f4; padding: 20px; }
+    .container { max-width: 980px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 28px 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
     .header { border-bottom: 3px solid #1a1a1a; padding-bottom: 14px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; }
     .header h1 { font-size: 20px; font-weight: 800; }
     .header .sub { font-size: 11px; color: #888; margin-top: 4px; }
@@ -22,46 +22,147 @@
     .fbtn { font-size: 11px; padding: 5px 12px; border-radius: 6px; border: 1.5px solid #ddd; background: #fff; color: #555; cursor: pointer; font-weight: 600; transition: all .15s; }
     .fbtn:hover { background: #f0f7ff; border-color: #2563eb; color: #2563eb; }
     .fbtn.ativo { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
-    .legenda { display: flex; gap: 18px; margin-bottom: 20px; flex-wrap: wrap; font-size: 12px; color: #555; }
+    .legenda { display: flex; gap: 14px; margin-bottom: 20px; flex-wrap: wrap; font-size: 12px; color: #555; }
     .leg { display: flex; align-items: center; gap: 6px; }
     .secao { margin-bottom: 24px; }
     .secao-titulo { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #888; margin-bottom: 6px; padding-left: 2px; }
+
+    /* ── DESKTOP TABLE ── */
     table { width: 100%; border-collapse: collapse; }
     thead th { background: #1a1a1a; color: #fff; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 9px 12px; text-align: left; }
-    thead th.col-c { text-align: center; width: 50px; }
-    thead th.col-r { width: 14%; }
-    thead th.col-p { width: 12%; }
-    thead th.col-s { text-align: center; width: 11%; }
+    thead th.col-c { text-align: center; width: 44px; }
+    thead th.col-r { width: 13%; }
+    thead th.col-p { width: 11%; }
+    thead th.col-s { text-align: center; width: 12%; }
     tbody tr:nth-child(even) { background: #f9f9f9; }
     tbody tr:hover { background: #f0f7ff; }
     tbody tr.concluido { opacity: 0.45; }
-    td { padding: 8px 12px; border-bottom: 1px solid #eee; vertical-align: middle; }
+    td { padding: 9px 12px; border-bottom: 1px solid #eee; vertical-align: middle; }
     tr:last-child td { border-bottom: none; }
-    td.func { font-weight: 500; color: #222; }
+    td.func { font-weight: 500; color: #222; font-size: 13px; }
     td.func.riscado { text-decoration: line-through; color: #aaa; font-weight: 400; }
     td.col-c { text-align: center; }
     td.col-r { font-size: 12px; color: #555; }
     td.col-p { font-size: 12px; color: #555; }
     td.col-s { text-align: center; }
-    .chk { width: 20px; height: 20px; border-radius: 5px; border: 2px solid #ccc; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; transition: all .15s; user-select: none; background: #fff; }
+
+    .chk { width: 22px; height: 22px; border-radius: 5px; border: 2px solid #ccc; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 15px; transition: all .15s; user-select: none; background: #fff; }
     .chk:hover { border-color: #16a34a; }
     .chk.marcado { background: #16a34a; border-color: #16a34a; color: #fff; }
-    .badge { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1.5px solid transparent; white-space: nowrap; transition: all .15s; user-select: none; }
+
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1.5px solid transparent; white-space: nowrap; transition: all .15s; user-select: none; }
     .badge:hover { transform: scale(1.07); }
-    .badge.s-ok       { background: #dcfce7; border-color: #16a34a; color: #14532d; }
-    .badge.s-pend     { background: #fef9c3; border-color: #ca8a04; color: #713f12; }
-    .badge.s-urgente  { background: #fee2e2; border-color: #dc2626; color: #7f1d1d; }
-    .badge.s-aberto   { background: #f1f5f9; border-color: #94a3b8; color: #334155; }
-    .badge.s-concluido{ background: #d1fae5; border-color: #059669; color: #065f46; }
+    .badge.s-ok        { background: #dcfce7; border-color: #16a34a;  color: #14532d; }
+    .badge.s-pend      { background: #fef9c3; border-color: #ca8a04;  color: #713f12; }
+    .badge.s-urgente   { background: #fee2e2; border-color: #dc2626;  color: #7f1d1d; }
+    .badge.s-aberto    { background: #f1f5f9; border-color: #94a3b8;  color: #334155; }
+    .badge.s-concluido { background: #d1fae5; border-color: #059669;  color: #065f46; }
+    .badge.s-andamento { background: #ede9fe; border-color: #7c3aed;  color: #3b0764; }
+
     tr.urgente-row td.func { color: #7f1d1d; }
     .aviso { background: #fff7ed; border: 1.5px solid #ea580c; border-radius: 8px; padding: 12px 16px; font-size: 12px; color: #7c2d12; margin-bottom: 20px; font-weight: 500; }
     .nota-box { margin-top: 20px; border: 1.5px dashed #ca8a04; border-radius: 8px; padding: 14px 18px; background: #fffbeb; }
     .nota-box h3 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #92400e; margin-bottom: 10px; }
     .nota-box ul { padding-left: 18px; }
     .nota-box li { font-size: 12px; color: #78350f; margin-bottom: 6px; line-height: 1.5; }
-    .rodape { margin-top: 28px; padding-top: 14px; border-top: 1px solid #ddd; font-size: 11px; color: #aaa; display: flex; justify-content: space-between; }
+    .rodape { margin-top: 28px; padding-top: 14px; border-top: 1px solid #ddd; font-size: 11px; color: #aaa; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
     .sub-header { background: #f1f5f9; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #64748b; padding: 6px 12px; }
     tr.oculto { display: none; }
+
+    /* ── MOBILE: cards ── */
+    @media (max-width: 640px) {
+      body { padding: 10px; font-size: 14px; }
+      .container { padding: 16px 14px; border-radius: 10px; }
+      .header h1 { font-size: 16px; }
+      .header .sub { font-size: 10px; }
+      .btn-print { padding: 8px 14px; font-size: 12px; }
+      .prog-bar { width: 80px; }
+      .filtros { gap: 5px; }
+      .fbtn { font-size: 11px; padding: 5px 9px; }
+      .legenda { gap: 10px; font-size: 11px; }
+
+      /* Ocultar thead no mobile */
+      thead { display: none; }
+
+      /* Cada tr vira um card */
+      table, tbody { display: block; width: 100%; }
+
+      tbody tr[data-s] {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 11px 10px;
+        border-bottom: 1px solid #e5e7eb;
+        background: #fff;
+      }
+      tbody tr[data-s]:nth-child(even) { background: #fafafa; }
+      tbody tr[data-s]:hover { background: #f0f7ff; }
+      tbody tr[data-s].concluido { opacity: 0.45; }
+      tbody tr[data-s].oculto { display: none; }
+
+      /* Sub-headers viram blocos normais */
+      tbody tr:not([data-s]) {
+        display: block;
+        background: #f1f5f9 !important;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        color: #64748b;
+        padding: 6px 10px;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      tbody tr:not([data-s]) td { display: block; padding: 0; border: none; background: transparent; }
+
+      /* Checkbox grande e fácil de tocar */
+      td.col-c { display: flex; align-items: flex-start; padding: 2px 0 0 0; flex-shrink: 0; }
+      .chk { width: 26px; height: 26px; border-radius: 6px; font-size: 16px; flex-shrink: 0; }
+
+      /* Bloco de conteúdo principal */
+      td.func {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #1a1a1a;
+        line-height: 1.4;
+        padding: 0;
+        flex: 1;
+        min-width: 0;
+      }
+      td.func.riscado { text-decoration: line-through; color: #aaa; font-weight: 400; }
+
+      /* Ocultar colunas resp e prazo individualmente — vão no card-meta */
+      td.col-r, td.col-p { display: none; }
+
+      /* Badge fica dentro do func como linha secundária via ::after não funciona,
+         então usamos JS para injetar card-meta */
+      td.col-s {
+        display: none; /* vamos mostrar via card-meta injetado */
+      }
+
+      .card-meta {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-top: 5px;
+      }
+      .card-meta .badge { font-size: 11px; padding: 3px 8px; }
+      .card-meta .meta-resp {
+        font-size: 11px;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .card-meta .meta-prazo {
+        font-size: 11px;
+        color: #9ca3af;
+      }
+
+      tr.urgente-row td.func { color: #7f1d1d; }
+    }
+
     @media print {
       body { background: #fff; padding: 0; }
       .container { box-shadow: none; border-radius: 0; padding: 24px 28px; }
@@ -95,6 +196,7 @@
     <button class="fbtn ativo" data-f="todos" onclick="filtrar(this)">Todos</button>
     <button class="fbtn" data-f="urgente" onclick="filtrar(this)">🔴 Urgente</button>
     <button class="fbtn" data-f="pend" onclick="filtrar(this)">🟡 Pendente</button>
+    <button class="fbtn" data-f="andamento" onclick="filtrar(this)">🔵 Em andamento</button>
     <button class="fbtn" data-f="aberto" onclick="filtrar(this)">⚪ Em aberto</button>
     <button class="fbtn" data-f="ok" onclick="filtrar(this)">🟢 Definido</button>
     <button class="fbtn" data-f="concluido" onclick="filtrar(this)">✅ Concluídos</button>
@@ -104,6 +206,7 @@
     <div class="leg"><span class="badge s-urgente">Urgente</span> Ação imediata</div>
     <div class="leg"><span class="badge s-pend">Pendente</span> Aguardando execução</div>
     <div class="leg"><span class="badge s-ok">Definido</span> Confirmado</div>
+    <div class="leg"><span class="badge s-andamento">Em andamento</span> Em execução agora</div>
     <div class="leg"><span class="badge s-aberto">Em aberto</span> Sem responsável/prazo</div>
     <div class="leg"><span class="badge s-concluido">Concluído</span> Feito ✓</div>
     <div class="leg" style="color:#888;font-style:italic;">← clique no ☐ ou no badge para atualizar</div>
@@ -394,11 +497,12 @@
 
 <script>
   const STATUS_CICLO = [
-    { cls: 's-urgente',  label: 'Urgente',   ds: 'urgente'  },
-    { cls: 's-pend',     label: 'Pendente',  ds: 'pend'     },
-    { cls: 's-ok',       label: 'Definido',  ds: 'ok'       },
-    { cls: 's-aberto',   label: 'Em aberto', ds: 'aberto'   },
-    { cls: 's-concluido',label: 'Concluído', ds: 'concluido'},
+    { cls: 's-urgente',   label: 'Urgente',      ds: 'urgente'   },
+    { cls: 's-pend',      label: 'Pendente',     ds: 'pend'      },
+    { cls: 's-andamento', label: 'Em andamento', ds: 'andamento' },
+    { cls: 's-ok',        label: 'Definido',     ds: 'ok'        },
+    { cls: 's-aberto',    label: 'Em aberto',    ds: 'aberto'    },
+    { cls: 's-concluido', label: 'Concluído',    ds: 'concluido' },
   ];
 
   function ciclarStatus(el) {
@@ -463,6 +567,60 @@
   }
 
   atualizarProgresso();
+
+  // ── MOBILE CARD META ──
+  function buildCardMetas() {
+    if (window.innerWidth > 640) return;
+    document.querySelectorAll('tbody tr[data-s]').forEach(tr => {
+      if (tr.querySelector('.card-meta')) return; // already built
+      const tdFunc  = tr.querySelector('td.func');
+      const tdResp  = tr.querySelector('td.col-r');
+      const tdPrazo = tr.querySelector('td.col-p');
+      const tdBadge = tr.querySelector('td.col-s');
+      if (!tdFunc) return;
+
+      const meta = document.createElement('div');
+      meta.className = 'card-meta';
+
+      if (tdBadge) {
+        const badgeClone = tdBadge.querySelector('.badge');
+        if (badgeClone) meta.appendChild(badgeClone.cloneNode(true));
+      }
+      if (tdResp && tdResp.textContent.trim()) {
+        const r = document.createElement('span');
+        r.className = 'meta-resp';
+        r.textContent = '👤 ' + tdResp.textContent.trim();
+        meta.appendChild(r);
+      }
+      if (tdPrazo && tdPrazo.textContent.trim()) {
+        const p = document.createElement('span');
+        p.className = 'meta-prazo';
+        p.textContent = '📅 ' + tdPrazo.textContent.trim();
+        meta.appendChild(p);
+      }
+      tdFunc.appendChild(meta);
+    });
+  }
+
+  // Rebuild card-metas on badge click to keep in sync
+  const origCiclar = ciclarStatus;
+  window.ciclarStatus = function(el) {
+    origCiclar(el);
+    // update cloned badge in card-meta
+    const tr = el.closest('tr');
+    const meta = tr.querySelector('.card-meta');
+    if (meta) {
+      const clonedBadge = meta.querySelector('.badge');
+      if (clonedBadge) {
+        clonedBadge.className = el.className;
+        clonedBadge.textContent = el.textContent;
+      }
+    }
+  };
+
+  buildCardMetas();
+  window.addEventListener('resize', buildCardMetas);
+
 </script>
 </body>
 </html>
