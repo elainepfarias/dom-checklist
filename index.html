@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Checklist Evento 13/06 — Dom da Areia</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 13px; color: #1a1a1a; background: #f4f4f4; padding: 24px; }
+    .container { max-width: 980px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 32px 36px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+    .header { border-bottom: 3px solid #1a1a1a; padding-bottom: 14px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; }
+    .header h1 { font-size: 20px; font-weight: 800; }
+    .header .sub { font-size: 11px; color: #888; margin-top: 4px; }
+    .header-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .btn-print { background: #1a1a1a; color: #fff; border: none; border-radius: 8px; padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .btn-print:hover { background: #333; }
+    .prog-wrap { display: flex; align-items: center; gap: 10px; background: #f9f9f9; border: 1px solid #eee; border-radius: 8px; padding: 8px 14px; }
+    .prog-label { font-size: 11px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+    .prog-bar { width: 120px; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; }
+    .prog-fill { height: 100%; background: #16a34a; border-radius: 4px; transition: width .4s; }
+    .prog-pct { font-size: 13px; font-weight: 700; color: #16a34a; min-width: 36px; }
+    .filtros { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+    .fbtn { font-size: 11px; padding: 5px 12px; border-radius: 6px; border: 1.5px solid #ddd; background: #fff; color: #555; cursor: pointer; font-weight: 600; transition: all .15s; }
+    .fbtn:hover { background: #f0f7ff; border-color: #2563eb; color: #2563eb; }
+    .fbtn.ativo { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+    .legenda { display: flex; gap: 18px; margin-bottom: 20px; flex-wrap: wrap; font-size: 12px; color: #555; }
+    .leg { display: flex; align-items: center; gap: 6px; }
+    .secao { margin-bottom: 24px; }
+    .secao-titulo { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #888; margin-bottom: 6px; padding-left: 2px; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th { background: #1a1a1a; color: #fff; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 9px 12px; text-align: left; }
+    thead th.col-c { text-align: center; width: 50px; }
+    thead th.col-r { width: 14%; }
+    thead th.col-p { width: 12%; }
+    thead th.col-s { text-align: center; width: 11%; }
+    tbody tr:nth-child(even) { background: #f9f9f9; }
+    tbody tr:hover { background: #f0f7ff; }
+    tbody tr.concluido { opacity: 0.45; }
+    td { padding: 8px 12px; border-bottom: 1px solid #eee; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    td.func { font-weight: 500; color: #222; }
+    td.func.riscado { text-decoration: line-through; color: #aaa; font-weight: 400; }
+    td.col-c { text-align: center; }
+    td.col-r { font-size: 12px; color: #555; }
+    td.col-p { font-size: 12px; color: #555; }
+    td.col-s { text-align: center; }
+    .chk { width: 20px; height: 20px; border-radius: 5px; border: 2px solid #ccc; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; transition: all .15s; user-select: none; background: #fff; }
+    .chk:hover { border-color: #16a34a; }
+    .chk.marcado { background: #16a34a; border-color: #16a34a; color: #fff; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1.5px solid transparent; white-space: nowrap; transition: all .15s; user-select: none; }
+    .badge:hover { transform: scale(1.07); }
+    .badge.s-ok       { background: #dcfce7; border-color: #16a34a; color: #14532d; }
+    .badge.s-pend     { background: #fef9c3; border-color: #ca8a04; color: #713f12; }
+    .badge.s-urgente  { background: #fee2e2; border-color: #dc2626; color: #7f1d1d; }
+    .badge.s-aberto   { background: #f1f5f9; border-color: #94a3b8; color: #334155; }
+    .badge.s-concluido{ background: #d1fae5; border-color: #059669; color: #065f46; }
+    tr.urgente-row td.func { color: #7f1d1d; }
+    .aviso { background: #fff7ed; border: 1.5px solid #ea580c; border-radius: 8px; padding: 12px 16px; font-size: 12px; color: #7c2d12; margin-bottom: 20px; font-weight: 500; }
+    .nota-box { margin-top: 20px; border: 1.5px dashed #ca8a04; border-radius: 8px; padding: 14px 18px; background: #fffbeb; }
+    .nota-box h3 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #92400e; margin-bottom: 10px; }
+    .nota-box ul { padding-left: 18px; }
+    .nota-box li { font-size: 12px; color: #78350f; margin-bottom: 6px; line-height: 1.5; }
+    .rodape { margin-top: 28px; padding-top: 14px; border-top: 1px solid #ddd; font-size: 11px; color: #aaa; display: flex; justify-content: space-between; }
+    .sub-header { background: #f1f5f9; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #64748b; padding: 6px 12px; }
+    tr.oculto { display: none; }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .container { box-shadow: none; border-radius: 0; padding: 24px 28px; }
+      .btn-print, .filtros { display: none; }
+      tbody tr:hover { background: inherit; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <h1>Dom da Areia — Checklist Evento 13/06/2025</h1>
+      <div class="sub">Clique em ☐ para marcar concluído · clique no badge de status para alterá-lo · use os filtros para focar no que importa</div>
+    </div>
+    <div class="header-right">
+      <div class="prog-wrap">
+        <span class="prog-label">Progresso</span>
+        <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+        <span class="prog-pct" id="prog-pct">0%</span>
+      </div>
+      <button class="btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+    </div>
+  </div>
+
+  <div class="aviso">⚠️ <strong>URGENTE HOJE (10/06):</strong> Testar a lona disponível à noite. Se não atender, acionar locação de tenda imediatamente — Wagner responsável.</div>
+
+  <div class="filtros">
+    <span style="font-size:11px;color:#888;align-self:center;font-weight:600;">Filtrar:</span>
+    <button class="fbtn ativo" data-f="todos" onclick="filtrar(this)">Todos</button>
+    <button class="fbtn" data-f="urgente" onclick="filtrar(this)">🔴 Urgente</button>
+    <button class="fbtn" data-f="pend" onclick="filtrar(this)">🟡 Pendente</button>
+    <button class="fbtn" data-f="aberto" onclick="filtrar(this)">⚪ Em aberto</button>
+    <button class="fbtn" data-f="ok" onclick="filtrar(this)">🟢 Definido</button>
+    <button class="fbtn" data-f="concluido" onclick="filtrar(this)">✅ Concluídos</button>
+  </div>
+
+  <div class="legenda">
+    <div class="leg"><span class="badge s-urgente">Urgente</span> Ação imediata</div>
+    <div class="leg"><span class="badge s-pend">Pendente</span> Aguardando execução</div>
+    <div class="leg"><span class="badge s-ok">Definido</span> Confirmado</div>
+    <div class="leg"><span class="badge s-aberto">Em aberto</span> Sem responsável/prazo</div>
+    <div class="leg"><span class="badge s-concluido">Concluído</span> Feito ✓</div>
+    <div class="leg" style="color:#888;font-style:italic;">← clique no ☐ ou no badge para atualizar</div>
+  </div>
+
+  <!-- ── 2. ESTRUTURA ── -->
+  <div class="secao">
+    <div class="secao-titulo">2. Finalização da Estrutura</div>
+    <table>
+      <thead><tr><th class="col-c">☐</th><th>Ação / Item</th><th class="col-r">Responsável</th><th class="col-p">Prazo</th><th class="col-s">Status</th></tr></thead>
+      <tbody>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Concluir banheiros</td><td class="col-r">Wagner, Magno, Welinton</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Concluir vestiários</td><td class="col-r">Wagner, Magno, Welinton</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Organização da cozinha</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Organização do escritório</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Organização dos depósitos e áreas de apoio</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 3. LIMPEZA GERAL ── -->
+  <div class="secao">
+    <div class="secao-titulo">3. Limpeza Geral Pré-Evento</div>
+    <table>
+      <thead><tr><th class="col-c">☐</th><th>Ação / Item</th><th class="col-r">Responsável</th><th class="col-p">Prazo</th><th class="col-s">Status</th></tr></thead>
+      <tbody>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Banheiros e vestiários</td><td class="col-r">Juliane</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Área externa e calçadas</td><td class="col-r">Juliane</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Área da churrasqueira e pia externa</td><td class="col-r">Juliane</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Mesas, cadeiras, bar e bancadas</td><td class="col-r">Juliane</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Bebedouro</td><td class="col-r">Juliane</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Lixeiras</td><td class="col-r">Juliane</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Cervejeiras e refrigeradores</td><td class="col-r">Juliane</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 4. PAISAGISMO ── -->
+  <div class="secao">
+    <div class="secao-titulo">4. Paisagismo e Apresentação</div>
+    <table>
+      <thead><tr><th class="col-c">☐</th><th>Ação / Item</th><th class="col-r">Responsável</th><th class="col-p">Prazo</th><th class="col-s">Status</th></tr></thead>
+      <tbody>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Limpeza da entrada</td><td class="col-r">Wagner</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Organização dos jardins</td><td class="col-r">Wagner</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Trazer plantas de casa e plantio de ornamentação</td><td class="col-r">Wagner</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Regar a grama</td><td class="col-r">Wagner</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Melhorias visuais gerais para recepção dos clientes</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 5. PADRÃO OPERACIONAL ── -->
+  <div class="secao">
+    <div class="secao-titulo">5. Padrão Operacional — durante o evento (Juliane responsável geral)</div>
+    <table>
+      <thead><tr><th class="col-c">☐</th><th>Ação / Item</th><th class="col-r">Responsável</th><th class="col-p">Prazo</th><th class="col-s">Status</th></tr></thead>
+      <tbody>
+        <tr data-s="ok"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Limpeza e organização contínua do ambiente durante todo o evento</td><td class="col-r">Juliane</td><td class="col-p">Contínuo</td><td class="col-s"><span class="badge s-ok" onclick="ciclarStatus(this)">Definido</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Limpeza das mesas após utilização</td><td class="col-r">Juliane</td><td class="col-p">Contínuo</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Organização das cadeiras</td><td class="col-r">Juliane</td><td class="col-p">Contínuo</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Verificação periódica dos banheiros e reposição de papel e sabonete</td><td class="col-r">Juliane</td><td class="col-p">Contínuo</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Organização do bar</td><td class="col-r">Juliane</td><td class="col-p">Contínuo</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Limpeza da churrasqueira e pia externa após uso</td><td class="col-r">Juliane</td><td class="col-p">Contínuo</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Recolhimento frequente de lixo</td><td class="col-r">Juliane</td><td class="col-p">Contínuo</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Higienização do bebedouro e lixeiras</td><td class="col-r">Juliane</td><td class="col-p">Contínuo</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 6. CAMPEONATO ── -->
+  <div class="secao">
+    <div class="secao-titulo">6. Campeonato Geladeira Solidária</div>
+    <table>
+      <thead><tr><th class="col-c">☐</th><th>Ação / Item</th><th class="col-r">Responsável</th><th class="col-p">Prazo</th><th class="col-s">Status</th></tr></thead>
+      <tbody>
+        <tr data-s="ok"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">16 duplas por categoria / 2 categorias</td><td class="col-r">—</td><td class="col-p">Definido</td><td class="col-s"><span class="badge s-ok" onclick="ciclarStatus(this)">Definido</span></td></tr>
+        <tr data-s="ok"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Início 08h00 (tolerância 15 min) / encerramento 18h00</td><td class="col-r">—</td><td class="col-p">Definido</td><td class="col-s"><span class="badge s-ok" onclick="ciclarStatus(this)">Definido</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Providenciar troféus de premiação</td><td class="col-r">Ivaldo</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="urgente" class="urgente-row"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Confirmar árbitros além de Magno</td><td class="col-r">Magno</td><td class="col-p">URGENTE</td><td class="col-s"><span class="badge s-urgente" onclick="ciclarStatus(this)">Urgente</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Providenciar marcadores de pontos e apitos</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Providenciar antenas de rede</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Imprimir súmulas</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Imprimir tabela do campeonato</td><td class="col-r">Elaine</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Mesas de apoio para o campeonato</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Sistema de som do campeonato</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 7. JOGO DA SELEÇÃO ── -->
+  <div class="secao">
+    <div class="secao-titulo">7. Transmissão do Jogo da Seleção — 13/06</div>
+    <table>
+      <thead><tr><th class="col-c">☐</th><th>Ação / Item</th><th class="col-r">Responsável</th><th class="col-p">Prazo</th><th class="col-s">Status</th></tr></thead>
+      <tbody>
+        <tr data-s="urgente" class="urgente-row"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Falar com Yuri sobre aluguel da TV para 13/06</td><td class="col-r">Magno</td><td class="col-p">URGENTE</td><td class="col-s"><span class="badge s-urgente" onclick="ciclarStatus(this)">Urgente</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Definir local exato da transmissão</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Sistema de som para transmissão</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Levar 15 cadeiras do espaço para o Dom da Areia</td><td class="col-r">Magno</td><td class="col-p">Até 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Locar mais 15 cadeiras</td><td class="col-r">Wagner</td><td class="col-p">Até 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Organizar mesas e cadeiras no local da transmissão</td><td class="col-r">A definir</td><td class="col-p">13/06 manhã</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 8. PLANO DE CHUVA ── -->
+  <div class="secao">
+    <div class="secao-titulo">8. Plano de Chuva</div>
+    <table>
+      <thead><tr><th class="col-c">☐</th><th>Ação / Item</th><th class="col-r">Responsável</th><th class="col-p">Prazo</th><th class="col-s">Status</th></tr></thead>
+      <tbody>
+        <tr data-s="urgente" class="urgente-row"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Testar lona disponível à noite de hoje (10/06)</td><td class="col-r">Wagner</td><td class="col-p">HOJE 10/06</td><td class="col-s"><span class="badge s-urgente" onclick="ciclarStatus(this)">Urgente</span></td></tr>
+        <tr data-s="urgente" class="urgente-row"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Se lona não atender: acionar locação de tenda imediatamente</td><td class="col-r">Wagner</td><td class="col-p">HOJE 10/06</td><td class="col-s"><span class="badge s-urgente" onclick="ciclarStatus(this)">Urgente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Toldo fixo da churrasqueira — plástico grosso transparente</td><td class="col-r">Wagner</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Se locar tenda: prever iluminação adequada</td><td class="col-r">Wagner</td><td class="col-p">A definir</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Definir onde ficará a churrasqueira se chover</td><td class="col-r">Wagner</td><td class="col-p">A definir</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 9. ÁREA GOURMET ── -->
+  <div class="secao">
+    <div class="secao-titulo">9. Área Gourmet — Alimentação</div>
+    <table>
+      <thead><tr><th class="col-c">☐</th><th>Ação / Item</th><th class="col-r">Responsável</th><th class="col-p">Prazo</th><th class="col-s">Status</th></tr></thead>
+      <tbody>
+        <tr><td colspan="5" class="sub-header">Arroz Carreteiro — almoço</td></tr>
+        <tr data-s="ok"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">50 pratos com mandioca — valor R$ 22,00</td><td class="col-r">—</td><td class="col-p">Definido</td><td class="col-s"><span class="badge s-ok" onclick="ciclarStatus(this)">Definido</span></td></tr>
+        <tr data-s="urgente" class="urgente-row"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Levantar lista de ingredientes com a mãe (quem fará)</td><td class="col-r">Magno</td><td class="col-p">URGENTE</td><td class="col-s"><span class="badge s-urgente" onclick="ciclarStatus(this)">Urgente</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Realizar compra dos ingredientes</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Definir horário de preparo</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+
+        <tr><td colspan="5" class="sub-header">Cachorro-Quente — tarde (previsão 30 un. / montagem na cozinha)</td></tr>
+        <tr data-s="ok"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Ingredientes: pão, salsicha, molho, batata palha, milho</td><td class="col-r">—</td><td class="col-p">Definido</td><td class="col-s"><span class="badge s-ok" onclick="ciclarStatus(this)">Definido</span></td></tr>
+        <tr data-s="urgente" class="urgente-row"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Levantar lista de ingredientes do molho (Arlete)</td><td class="col-r">Elaine</td><td class="col-p">URGENTE</td><td class="col-s"><span class="badge s-urgente" onclick="ciclarStatus(this)">Urgente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Comprar sachês de ketchup, maionese e mostarda</td><td class="col-r">Elaine / Juliane</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Encontrar fornecedor de pão de cachorro-quente de qualidade</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Definir valor de venda do cachorro-quente</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Definir responsável pelo preparo e montagem na cozinha</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Realizar compras (2 pct batata palha 300g / 2 latas milho 200g)</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+
+        <tr><td colspan="5" class="sub-header">Espetinho — noite (50 un. / só farinha R$11 / c/ mandioca R$13 / jantinha R$22)</td></tr>
+        <tr data-s="urgente" class="urgente-row"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Negociar parceria com Açougue Província (desconto)</td><td class="col-r">Magno</td><td class="col-p">URGENTE</td><td class="col-s"><span class="badge s-urgente" onclick="ciclarStatus(this)">Urgente</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Confirmar quem irá assar</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Prever e comprar carvão (quantidade e responsável)</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Comprar ingredientes do vinagrete (6–8 tomates, 3 cebolas, 4 limões, azeite, vinagre, sal)</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Realizar compra dos espetinhos</td><td class="col-r">A definir</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 10. BEBIDAS ── -->
+  <div class="secao">
+    <div class="secao-titulo">10. Bebidas e Snacks</div>
+    <table>
+      <thead><tr><th class="col-c">☐</th><th>Ação / Item</th><th class="col-r">Responsável</th><th class="col-p">Qtd</th><th class="col-s">Status</th></tr></thead>
+      <tbody>
+        <tr><td colspan="5" class="sub-header">Cervejas</td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Heineken</td><td class="col-r">Juliane</td><td class="col-p">96 un.</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Heineken 0% (lata)</td><td class="col-r">Juliane</td><td class="col-p">12 un.</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Corona</td><td class="col-r">Elaine</td><td class="col-p">48 un.</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Stella Pure Gold</td><td class="col-r">Elaine</td><td class="col-p">48 un.</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Império</td><td class="col-r">Wagner</td><td class="col-p">48 un.</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr><td colspan="5" class="sub-header">Refrigerantes e Águas</td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Coca-Cola normal</td><td class="col-r">Juliane</td><td class="col-p">12 un.</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Coca-Cola Zero</td><td class="col-r">Juliane</td><td class="col-p">12 un.</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Água com gás</td><td class="col-r">Elaine</td><td class="col-p">12 un.</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Limonetto</td><td class="col-r">Elaine</td><td class="col-p">12 un.</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr><td colspan="5" class="sub-header">Isotônicos e Energéticos</td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Gatorade limão</td><td class="col-r">Elaine</td><td class="col-p">12 un.</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Gatorade uva</td><td class="col-r">Elaine</td><td class="col-p">12 un.</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Gatorade morango</td><td class="col-r">Juliane</td><td class="col-p">12 un.</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Guaraviton</td><td class="col-r">Elaine</td><td class="col-p">12 un.</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr><td colspan="5" class="sub-header">Snacks</td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Ruffles</td><td class="col-r">Juliane</td><td class="col-p">10 un.</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Doritos</td><td class="col-r">Elaine (Bees)</td><td class="col-p">10 un.</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Paçoca rolha e normal</td><td class="col-r">Juliane</td><td class="col-p">1 cx. cada</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Barra de cereal banana c/ chocolate e chocolate</td><td class="col-r">Juliane</td><td class="col-p">1 cx. cada</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Amendoim (pack)</td><td class="col-r">Juliane</td><td class="col-p">1 pack 20 un.</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Milho com mostarda (pacotes 100g — venda individual)</td><td class="col-r">Juliane</td><td class="col-p">5 pacotes</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Conferir armazenamento e refrigeração de todos os itens</td><td class="col-r">A definir</td><td class="col-p">12/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 11. EMBALAGENS ── -->
+  <div class="secao">
+    <div class="secao-titulo">11. Embalagens e Insumos — Juliane</div>
+    <table>
+      <thead><tr><th class="col-c">☐</th><th>Ação / Item</th><th class="col-r">Responsável</th><th class="col-p">Qtd</th><th class="col-s">Status</th></tr></thead>
+      <tbody>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Pratinhos descartáveis</td><td class="col-r">Juliane</td><td class="col-p">120 un.</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Garfos e facas descartáveis</td><td class="col-r">Juliane</td><td class="col-p">120 un. cada</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Guardanapos</td><td class="col-r">Juliane</td><td class="col-p">3 pacotes</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Copos descartáveis</td><td class="col-r">Juliane</td><td class="col-p">2 pct de 100</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Embalagens para cachorro-quente</td><td class="col-r">Juliane</td><td class="col-p">A definir</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Embalagens para espetinho</td><td class="col-r">Juliane</td><td class="col-p">A definir</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Sacos de lixo (reposição)</td><td class="col-r">Juliane</td><td class="col-p">A definir</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 12. FICHAS ── -->
+  <div class="secao">
+    <div class="secao-titulo">12. Fichas de Consumo — Elaine</div>
+    <table>
+      <thead><tr><th class="col-c">☐</th><th>Ação / Item</th><th class="col-r">Responsável</th><th class="col-p">Prazo</th><th class="col-s">Status</th></tr></thead>
+      <tbody>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Definir modelo de controle das fichas</td><td class="col-r">Elaine</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Definir quantidade de fichas necessárias</td><td class="col-r">Elaine</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Fazer e imprimir fichas de bebidas e alimentação</td><td class="col-r">Elaine</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Imprimir tabela de valores do bar</td><td class="col-r">Elaine</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 13. IDENTIDADE VISUAL ── -->
+  <div class="secao">
+    <div class="secao-titulo">13. Identidade Visual — Wagner</div>
+    <table>
+      <thead><tr><th class="col-c">☐</th><th>Ação / Item</th><th class="col-r">Responsável</th><th class="col-p">Prazo</th><th class="col-s">Status</th></tr></thead>
+      <tbody>
+        <tr data-s="urgente" class="urgente-row"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Finalizar logo do Dom da Areia</td><td class="col-r">Wagner</td><td class="col-p">URGENTE</td><td class="col-s"><span class="badge s-urgente" onclick="ciclarStatus(this)">Urgente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Definir arte da fachada</td><td class="col-r">Wagner</td><td class="col-p">A definir</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Produzir banner principal</td><td class="col-r">Wagner</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 14. IDENTIFICAÇÃO DA EQUIPE ── -->
+  <div class="secao">
+    <div class="secao-titulo">14. Identificação da Equipe</div>
+    <table>
+      <thead><tr><th class="col-c">☐</th><th>Ação / Item</th><th class="col-r">Responsável</th><th class="col-p">Prazo</th><th class="col-s">Status</th></tr></thead>
+      <tbody>
+        <tr data-s="urgente" class="urgente-row"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Pesquisar camiseta do Brasil com logo personalizada Dom da Areia</td><td class="col-r">Elaine</td><td class="col-p">URGENTE</td><td class="col-s"><span class="badge s-urgente" onclick="ciclarStatus(this)">Urgente</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Decidir: padronizar por cor ou camiseta com logo</td><td class="col-r">A definir</td><td class="col-p">A definir</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+        <tr data-s="aberto"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Definir quantidade por evento e encomendar</td><td class="col-r">A definir</td><td class="col-p">A definir</td><td class="col-s"><span class="badge s-aberto" onclick="ciclarStatus(this)">Em aberto</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 15. COMPRAS POR RESPONSÁVEL ── -->
+  <div class="secao">
+    <div class="secao-titulo">15. Compras — Estrutura e Banheiros</div>
+    <table>
+      <thead><tr><th class="col-c">☐</th><th>Ação / Item</th><th class="col-r">Responsável</th><th class="col-p">Prazo</th><th class="col-s">Status</th></tr></thead>
+      <tbody>
+        <tr><td colspan="5" class="sub-header">Juliane</td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">4x tapete para chuveiro</td><td class="col-r">Juliane</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Chuveiros</td><td class="col-r">Juliane</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Lixeiras para banheiros</td><td class="col-r">Juliane</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Pesquisar banco para vestiário</td><td class="col-r">Juliane</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Espelhos para banheiros e vestiário</td><td class="col-r">Juliane</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="urgente" class="urgente-row"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Fazer tabela do torneio para Elaine imprimir</td><td class="col-r">Juliane</td><td class="col-p">URGENTE</td><td class="col-s"><span class="badge s-urgente" onclick="ciclarStatus(this)">Urgente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Luva preta</td><td class="col-r">Juliane</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr><td colspan="5" class="sub-header">Wagner / Magno</td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Acabamento de registro dos chuveirões</td><td class="col-r">Wagner / Magno</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Mão francesa</td><td class="col-r">Wagner / Magno</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr><td colspan="5" class="sub-header">Elaine</td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Orçar e comprar itens via app Bees</td><td class="col-r">Elaine</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="pend"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Imprimir tabela do campeonato</td><td class="col-r">Elaine</td><td class="col-p">Antes de 13/06</td><td class="col-s"><span class="badge s-pend" onclick="ciclarStatus(this)">Pendente</span></td></tr>
+        <tr data-s="urgente" class="urgente-row"><td class="col-c"><span class="chk" onclick="marcar(this)"></span></td><td class="func">Pesquisar camiseta do Brasil com logo Dom da Areia</td><td class="col-r">Elaine</td><td class="col-p">URGENTE</td><td class="col-s"><span class="badge s-urgente" onclick="ciclarStatus(this)">Urgente</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="nota-box">
+    <h3>⚪ Itens ainda sem responsável — definir na próxima reunião</h3>
+    <ul>
+      <li><strong>Sistema de som</strong> — campeonato e transmissão da Seleção</li>
+      <li><strong>Local exato da transmissão</strong> — onde ficam TV e cadeiras?</li>
+      <li><strong>Mesas de apoio do campeonato</strong> — temos ou precisamos locar?</li>
+      <li><strong>Quem assa o espetinho e quem monta o cachorro-quente</strong></li>
+      <li><strong>Compra dos ingredientes</strong> do arroz carreteiro, vinagrete e cachorro-quente</li>
+      <li><strong>Modelo e quantidade das fichas</strong> de consumo</li>
+      <li><strong>Embalagens</strong> de espetinho e cachorro-quente (modelo e qtd)</li>
+    </ul>
+  </div>
+
+  <div class="rodape">
+    <span>Dom da Areia — Evento 13/06/2025</span>
+    <span>Checklist atualizado em 10/06/2025 · acompanhamento: _______________</span>
+  </div>
+
+</div>
+
+<script>
+  const STATUS_CICLO = [
+    { cls: 's-urgente',  label: 'Urgente',   ds: 'urgente'  },
+    { cls: 's-pend',     label: 'Pendente',  ds: 'pend'     },
+    { cls: 's-ok',       label: 'Definido',  ds: 'ok'       },
+    { cls: 's-aberto',   label: 'Em aberto', ds: 'aberto'   },
+    { cls: 's-concluido',label: 'Concluído', ds: 'concluido'},
+  ];
+
+  function ciclarStatus(el) {
+    const atual = STATUS_CICLO.findIndex(s => el.classList.contains(s.cls));
+    const prox  = (atual + 1) % STATUS_CICLO.length;
+    el.classList.remove(STATUS_CICLO[atual].cls);
+    el.classList.add(STATUS_CICLO[prox].cls);
+    el.textContent = STATUS_CICLO[prox].label;
+    const tr = el.closest('tr');
+    tr.dataset.s = STATUS_CICLO[prox].ds;
+    tr.classList.toggle('urgente-row', STATUS_CICLO[prox].ds === 'urgente');
+    aplicarFiltro();
+  }
+
+  function marcar(el) {
+    el.classList.toggle('marcado');
+    const marcado = el.classList.contains('marcado');
+    el.textContent = marcado ? '✓' : '';
+    const tr = el.closest('tr');
+    tr.classList.toggle('concluido', marcado);
+    const tdFunc = tr.querySelector('.func');
+    if (tdFunc) tdFunc.classList.toggle('riscado', marcado);
+    if (marcado) {
+      const badge = tr.querySelector('.badge');
+      if (badge) {
+        STATUS_CICLO.forEach(s => badge.classList.remove(s.cls));
+        badge.classList.add('s-concluido');
+        badge.textContent = 'Concluído';
+        tr.dataset.s = 'concluido';
+      }
+    }
+    atualizarProgresso();
+    aplicarFiltro();
+  }
+
+  function atualizarProgresso() {
+    const todos   = document.querySelectorAll('.chk');
+    const marcados = document.querySelectorAll('.chk.marcado');
+    const pct = todos.length ? Math.round(marcados.length / todos.length * 100) : 0;
+    document.getElementById('prog-fill').style.width = pct + '%';
+    document.getElementById('prog-pct').textContent  = pct + '%';
+  }
+
+  let filtroAtivo = 'todos';
+
+  function filtrar(btn) {
+    document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('ativo'));
+    btn.classList.add('ativo');
+    filtroAtivo = btn.dataset.f;
+    aplicarFiltro();
+  }
+
+  function aplicarFiltro() {
+    document.querySelectorAll('tbody tr[data-s]').forEach(tr => {
+      const s    = tr.dataset.s;
+      let vis = true;
+      if      (filtroAtivo === 'todos')    vis = true;
+      else if (filtroAtivo === 'concluido') vis = s === 'concluido';
+      else vis = s !== 'concluido' && s === filtroAtivo;
+      tr.classList.toggle('oculto', !vis);
+    });
+  }
+
+  atualizarProgresso();
+</script>
+</body>
+</html>
